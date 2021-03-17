@@ -91,12 +91,14 @@ label{
 }
 canvas{
     position: absolute;
-    display: none;
+    z-index: -1;
+    /* display: none; */
     
      /* border: 1px solid #000; */
 }
 .mostrar{
     display: block;
+    z-index: 2;
 }
 .blockClick{
     pointer-events:none;

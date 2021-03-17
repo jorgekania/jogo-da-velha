@@ -3,103 +3,36 @@
 //constante e variáveis do jogo
 const celulas = document.querySelectorAll('.celula');
 const grid = document.getElementById('grid');
-const w = grid.clientWidth;
-const h = grid.clientHeight;
-const wc = w - 10;
-const hc = h - 10;
+
 const jogadorX = "✘";
 const jogadorO = "◎";
 let fimDeJogo = false;
 let jogador;
 let centro;
-
+let proxJogador = true;
 
 //Montagem do canvas para criar a linha que mostra o vencedor
-const canvasEl = document.getElementById('linhaCanvas');
-let ctx = canvasEl.getContext('2d');
+const canvas = document.querySelector('canvas');
+let w = canvas.clientWidth;
+let h = canvas.clientHeight;
+let startX = 0;
+let startY = 0;
+let dif = 60;
+let ctx = canvas.getContext('2d');
 
-let li = 10;
-let lf = 10;
-
-function primeiraLinhaHorizontal() {
-    ctx.strokeStyle = '#ffffff';
+function geraLinha(x, y, w, h) {
     ctx.beginPath();
-    ctx.moveTo(10, 60);
-    ctx.lineTo(332, 60);
-    ctx.lineWidth = 4;
-    ctx.closePath();
+    ctx.strokeStyle = 'yellow';
+    ctx.moveTo(x, y);
+    ctx.lineTo(w, h);
+    ctx.lineWidth = 20;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "red";
+    ctx.lineCap = 'square';
     ctx.stroke();
-}
-
-function linhaCentroHorizontal() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(10, 170);
-    ctx.lineTo(332, 170);
-    ctx.lineWidth = 4;
+    ctx.save();
     ctx.closePath();
-    ctx.stroke();
 }
-
-function ultimaLinhaHorizontal() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(10, 285);
-    ctx.lineTo(332, 285);
-    ctx.lineWidth = 4;
-    ctx.closePath();
-    ctx.stroke();
-}
-
-function primeiraLinhaVertical() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(60, 10);
-    ctx.lineTo(60, 332);
-    ctx.lineWidth = 4;
-    ctx.closePath();
-    ctx.stroke();
-}
-
-function linhaCentroVertical() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(175, 10);
-    ctx.lineTo(175, 332);
-    ctx.lineWidth = 4;
-    ctx.closePath();
-    ctx.stroke();
-}
-
-function ultimaLinhaVertical() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(285, 10);
-    ctx.lineTo(285, 332);
-    ctx.lineWidth = 4;
-    ctx.closePath();
-    ctx.stroke();
-}
-
-function linhaDiagonalBaixo() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(li, lf);
-    ctx.lineTo(wc, hc);
-    ctx.lineWidth = 4;
-    ctx.closePath();
-    ctx.stroke();
-}
-function linhaDiagonalCima() {
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(10, 332);
-    ctx.lineTo(332, 10);
-    ctx.lineWidth = 4;
-    ctx.closePath();
-    ctx.stroke();
-}
-
 
 //Array com as combinações do tabuleiro
 const combinacoes = [
@@ -144,17 +77,16 @@ function jogadorCPU() {
     if (centro == false || centro == undefined) {
         jogar(jogadasDisponiveis[4], jogadorO);
         centro = true;
-        ver();
+        // ver();
     } else {
         const jogadaAleatoria = Math.floor(
             Math.random() * jogadasDisponiveis.length
         );
         if (!fimDeJogo) {
             jogar(jogadasDisponiveis[jogadaAleatoria], jogadorO);
-            ver();
+            // ver();
         }
     }
-
 }
 
 //Função para efetuar o jogo
@@ -169,11 +101,12 @@ function jogar(id, jogador) {
     celula.classList.add(jogador);
     celula.classList.add('blockClick');
     analisarVencedor(jogador);
-
 }
 
 //Função que analisa se ouve um vencedor
 function analisarVencedor(jogador) {
+
+    ver();
     let combinacao = [];
     const vencedor = combinacoes.some((comb) => {
         return comb.every((index) => {
@@ -215,7 +148,7 @@ function verificarEmpate() {
 function finalizarJogo(vencedor = null) {
 
     fimDeJogo = true;
-    canvasEl.classList.add('mostrar');
+    canvas.classList.add('mostrar');
 
     function carregar() {
 
@@ -234,12 +167,12 @@ function finalizarJogo(vencedor = null) {
             h2.innerHTML = `<img id="empate" src="./img/empate.gif"><br>O jogo Empatou.`;
         }
 
-        let relogio = 5;
+        let relogio = 1;
 
         setInterval(() => {
             h3.innerHTML = `<span class="relogio">Reiniciando em ${relogio--} seg.</span>`;
         }, 1000);
-        setTimeout(() => location.reload(), 5000);
+        setTimeout(() => location.reload(), 1000);
     }
 
     setTimeout(carregar, 1000)
@@ -247,45 +180,59 @@ function finalizarJogo(vencedor = null) {
 
 //Gerar a linha de canvas na combinação efetuada
 const ver = () => {
-    document.addEventListener('click', (event) => {
 
-        if (event.target.matches('.celula')) {
-            //verificação para jogador ✘
-            if (celulas[0].textContent === jogadorX && celulas[1].textContent === jogadorX && celulas[2].textContent === jogadorX) {
-                primeiraLinhaHorizontal();
-            } else if (celulas[3].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[5].textContent === jogadorX) {
-                linhaCentroHorizontal();
-            } else if (celulas[6].textContent === jogadorX && celulas[7].textContent === jogadorX && celulas[8].textContent === jogadorX) {
-                ultimaLinhaHorizontal();
-            } else if (celulas[0].textContent === jogadorX && celulas[3].textContent === jogadorX && celulas[6].textContent === jogadorX) {
-                primeiraLinhaVertical();
-            } else if (celulas[1].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[7].textContent === jogadorX) {
-                linhaCentroVertical();
-            } else if (celulas[2].textContent === jogadorX && celulas[5].textContent === jogadorX && celulas[8].textContent === jogadorX) {
-                ultimaLinhaVertical();
-            } else if (celulas[0].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[8].textContent === jogadorX) {
-                linhaDiagonalBaixo();
-            } else if (celulas[2].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[6].textContent === jogadorX) {
-                linhaDiagonalCima();
+    //verificação para jogador ✘
+    if (celulas[0].textContent === jogadorX && celulas[1].textContent === jogadorX && celulas[2].textContent === jogadorX) {
+        geraLinha(startX, (startX + dif), w, (startX + dif));
+    } else if (celulas[3].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[5].textContent === jogadorX) {
+        geraLinha(startX, (w / 2), w, h - (h / 2));
+    } else if (celulas[6].textContent === jogadorX && celulas[7].textContent === jogadorX && celulas[8].textContent === jogadorX) {
+        geraLinha(startX, (h - dif), w, (h - dif));
+    } else if (celulas[0].textContent === jogadorX && celulas[3].textContent === jogadorX && celulas[6].textContent === jogadorX) {
+        geraLinha((startX + dif), startY, (startX + dif), h);
+    } else if (celulas[1].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[7].textContent === jogadorX) {
+        geraLinha((w / 2), startY, (w / 2), h);
+    } else if (celulas[2].textContent === jogadorX && celulas[5].textContent === jogadorX && celulas[8].textContent === jogadorX) {
+        geraLinha(w - dif, startY, h - dif, h);
+    } else if (celulas[0].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[8].textContent === jogadorX) {
+        geraLinha(startX, startY, w, h);
+    } else if (celulas[2].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[6].textContent === jogadorX) {
+        geraLinha(w, startX, startY, h);
 
-                //verificação para jogador ◎
-            } else if (celulas[0].textContent === jogadorO && celulas[1].textContent === jogadorO && celulas[2].textContent === jogadorO) {
-                primeiraLinhaHorizontal();
-            } else if (celulas[3].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[5].textContent === jogadorO) {
-                linhaCentroHorizontal();
-            } else if (celulas[6].textContent === jogadorO && celulas[7].textContent === jogadorO && celulas[8].textContent === jogadorO) {
-                ultimaLinhaHorizontal();
-            } else if (celulas[0].textContent === jogadorO && celulas[3].textContent === jogadorO && celulas[6].textContent === jogadorO) {
-                primeiraLinhaVertical();
-            } else if (celulas[1].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[7].textContent === jogadorO) {
-                linhaCentroVertical();
-            } else if (celulas[2].textContent === jogadorO && celulas[5].textContent === jogadorO && celulas[8].textContent === jogadorO) {
-                ultimaLinhaVertical();
-            } else if (celulas[0].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[8].textContent === jogadorO) {
-                linhaDiagonalCima();
-            } else if (celulas[2].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[6].textContent === jogadorO) {
-                linhaDiagonalBaixo();
-            }
-        }
-    });
+        //verificação para jogador ◎
+    } else if (celulas[0].textContent === jogadorO && celulas[1].textContent === jogadorO && celulas[2].textContent === jogadorO) {
+        geraLinha(startX, (startX + dif), w, (startX + dif));
+    } else if (celulas[3].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[5].textContent === jogadorO) {
+        geraLinha(startX, (w / 2), w, h - (h / 2));
+    } else if (celulas[6].textContent === jogadorO && celulas[7].textContent === jogadorO && celulas[8].textContent === jogadorO) {
+        geraLinha(startX, (h - dif), w, (h - dif));
+    } else if (celulas[0].textContent === jogadorO && celulas[3].textContent === jogadorO && celulas[6].textContent === jogadorO) {
+        geraLinha((startX + dif), startY, (startX + dif), h);
+    } else if (celulas[1].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[7].textContent === jogadorO) {
+        geraLinha((w / 2), startY, (w / 2), h);
+    } else if (celulas[2].textContent === jogadorO && celulas[5].textContent === jogadorO && celulas[8].textContent === jogadorO) {
+        geraLinha(w - dif, startY, h - dif, h);
+    } else if (celulas[0].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[8].textContent === jogadorO) {
+        geraLinha(startX, startY, w, h);
+    } else if (celulas[2].textContent === jogadorO && celulas[4].textContent === jogadorO && celulas[6].textContent === jogadorO) {
+        geraLinha(w, startX, startY, h);
+    }
 }
+
+
+
+
+
+// function draw() {
+
+//     geraLinha(startX, startY, w, h);//diagonal esquerda > direita
+//     geraLinha(w, startX, startY, h);//diagonal direita > esquerda
+
+//     geraLinha(startX, (h / 4), w, (h / 4)); //primeira linha horizontal
+//     geraLinha(startX, (w / 2), w, h - (h / 2)); //linha centro horizontal
+//     geraLinha(startX, w - (w / 4), w, h - (h / 4)); //ultima linha horizontal
+
+//     geraLinha((w / 4), startY, (h / 4), h); //primeira linha vertical
+//     geraLinha((w / 2), startY, (w / 2), h); //linha centro vertical
+//     geraLinha(w - (w / 4), startY, h - (h / 4), h); //ultima linha vertical
+// }
