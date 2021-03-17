@@ -218,21 +218,3 @@ const ver = () => {
         geraLinha(w, startX, startY, h);
     }
 }
-
-
-
-
-
-// function draw() {
-
-//     geraLinha(startX, startY, w, h);//diagonal esquerda > direita
-//     geraLinha(w, startX, startY, h);//diagonal direita > esquerda
-
-//     geraLinha(startX, (h / 4), w, (h / 4)); //primeira linha horizontal
-//     geraLinha(startX, (w / 2), w, h - (h / 2)); //linha centro horizontal
-//     geraLinha(startX, w - (w / 4), w, h - (h / 4)); //ultima linha horizontal
-
-//     geraLinha((w / 4), startY, (h / 4), h); //primeira linha vertical
-//     geraLinha((w / 2), startY, (w / 2), h); //linha centro vertical
-//     geraLinha(w - (w / 4), startY, h - (h / 4), h); //ultima linha vertical
-// }
