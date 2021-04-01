@@ -71,7 +71,7 @@ const combinacoes = [
 document.addEventListener('click', (event) => {
     if (event.target.matches('.celula')) {
         jogar(event.target.id, jogadorX);
-        setTimeout(() => jogadorCPU(), 1500);
+        setTimeout(() => jogadorCPU(), 500);
     }
 })
 
