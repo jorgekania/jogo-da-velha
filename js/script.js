@@ -8,7 +8,7 @@ const jogadorX = "✘";
 const jogadorO = "◎";
 let fimDeJogo = false;
 let jogador;
-let centro;
+let centro = false;
 let proxJogador = true;
 
 //Montagem do canvas para criar a linha que mostra o vencedor
@@ -20,14 +20,30 @@ let startY = 0;
 let dif = 60;
 let ctx = canvas.getContext('2d');
 
+for (var i = 0; i < celulas.length; i++) {
+
+    let idCelula = celulas[i].id;
+
+    if (idCelula === '0' || idCelula === '3' || idCelula === '6') {
+        celulas[i].style.borderRight = '1px solid #000000';
+    } else if (idCelula === '1' || idCelula === '4' || idCelula === '7') {
+        celulas[i].style.borderRight = '1px solid #000000';
+    } else if (idCelula === '2' || idCelula === '5') {
+        celulas[i].style.borderBottom = '1px solid #000000';
+    }
+
+    if (idCelula === '0' || idCelula === '3') {
+        celulas[i].style.borderBottom = '1px solid #000000';
+    } else if (idCelula === '1' || idCelula === '4') {
+        celulas[i].style.borderBottom = '1px solid #000000';
+    }
+}
+
 function geraLinha(x, y, w, h) {
     ctx.beginPath();
-    ctx.strokeStyle = 'yellow';
     ctx.moveTo(x, y);
     ctx.lineTo(w, h);
-    ctx.lineWidth = 20;
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = "red";
+    ctx.lineWidth = 5;
     ctx.lineCap = 'square';
     ctx.stroke();
     ctx.save();
@@ -55,36 +71,97 @@ const combinacoes = [
 document.addEventListener('click', (event) => {
     if (event.target.matches('.celula')) {
         jogar(event.target.id, jogadorX);
-        setTimeout(() => jogadorCPU(), 500);
+        setTimeout(() => jogadorCPU(), 1500);
     }
 })
 
 //Função para jogar com o computador 
 function jogadorCPU() {
     const jogadasDisponiveis = [];
+    let jogadaAleatoria;
     let index;
 
     for (index in celulas) {
         if (!isNaN(index)) {
             if (
-                !celulas[index].classList.contains('✘') &&
-                !celulas[index].classList.contains('◎')) {
+                !celulas[index].classList.contains(jogadorX) &&
+                !celulas[index].classList.contains(jogadorO)) {
                 jogadasDisponiveis.push(index);
             }
         }
     }
 
-    if (centro == false || centro == undefined) {
-        jogar(jogadasDisponiveis[4], jogadorO);
-        centro = true;
-        // ver();
-    } else {
-        const jogadaAleatoria = Math.floor(
-            Math.random() * jogadasDisponiveis.length
-        );
-        if (!fimDeJogo) {
+    if (!fimDeJogo) {
+
+        //verificação para jogador ✘ em linha
+        if (celulas[0].textContent === jogadorX && celulas[1].textContent === jogadorX && celulas[2].textContent === '') {
+            jogar(2, jogadorO);
+        } else if (celulas[1].textContent === jogadorX && celulas[2].textContent === jogadorX && celulas[0].textContent === '') {
+            jogar(0, jogadorO);
+        } else if (celulas[0].textContent === jogadorX && celulas[2].textContent === jogadorX && celulas[1].textContent === '') {
+            jogar(1, jogadorO);
+        }
+        //Verificando linha 2
+        else if (celulas[3].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[5].textContent === '') {
+            jogar(5, jogadorO);
+        } else if (celulas[4].textContent === jogadorX && celulas[5].textContent === jogadorX && celulas[3].textContent === '') {
+            jogar(3, jogadorO);
+        } else if (celulas[3].textContent === jogadorX && celulas[5].textContent === jogadorX && celulas[4].textContent === '') {
+            jogar(4, jogadorO);
+        }
+        //Verificando linha 3
+        else if (celulas[6].textContent === jogadorX && celulas[7].textContent === jogadorX && celulas[8].textContent === '') {
+            jogar(8, jogadorO);
+        } else if (celulas[7].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[6].textContent === '') {
+            jogar(6, jogadorO);
+        } else if (celulas[6].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[7].textContent === '') {
+            jogar(7, jogadorO);
+        }
+        //verificação para jogador ✘ em colunas
+        else if (celulas[0].textContent === jogadorX && celulas[3].textContent === jogadorX && celulas[6].textContent === '') {
+            jogar(6, jogadorO);
+        } else if (celulas[3].textContent === jogadorX && celulas[6].textContent === jogadorX && celulas[0].textContent === '') {
+            jogar(0, jogadorO);
+        } else if (celulas[0].textContent === jogadorX && celulas[6].textContent === jogadorX && celulas[3].textContent === '') {
+            jogar(3, jogadorO);
+        }
+        //Verificando coluna 2
+        else if (celulas[1].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[7].textContent === '') {
+            jogar(7, jogadorO);
+        } else if (celulas[4].textContent === jogadorX && celulas[7].textContent === jogadorX && celulas[1].textContent === '') {
+            jogar(1, jogadorO);
+        } else if (celulas[1].textContent === jogadorX && celulas[7].textContent === jogadorX && celulas[4].textContent === '') {
+            jogar(4, jogadorO);
+        }
+        //Verificando coluna 3
+        else if (celulas[2].textContent === jogadorX && celulas[5].textContent === jogadorX && celulas[8].textContent === '') {
+            jogar(8, jogadorO);
+        } else if (celulas[5].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[2].textContent === '') {
+            jogar(2, jogadorO);
+        } else if (celulas[2].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[5].textContent === '') {
+            jogar(5, jogadorO);
+        }
+        //Verificação da condições diagonais
+        else if (celulas[0].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[4].textContent === '') {
+            jogar(4, jogadorO);
+        } else if (celulas[4].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[0].textContent === '') {
+            jogar(0, jogadorO);
+        } else if (celulas[2].textContent === jogadorX && celulas[4].textContent === jogadorX && celulas[6].textContent === '') {
+            jogar(6, jogadorO);
+        } else if (celulas[4].textContent === jogadorX && celulas[6].textContent === jogadorX && celulas[2].textContent === '') {
+            jogar(2, jogadorO);
+        } else if (celulas[0].textContent === jogadorX && celulas[8].textContent === jogadorX && celulas[4].textContent === '') {
+            jogar(4, jogadorO);
+        } else if (celulas[2].textContent === jogadorX && celulas[6].textContent === jogadorX && celulas[4].textContent === '') {
+            jogar(4, jogadorO);
+
+        }
+        //Caso nenhuma das condições sejam satisfeitas
+        else {
+            jogadaAleatoria = Math.floor(
+                Math.random() * jogadasDisponiveis.length
+            );
             jogar(jogadasDisponiveis[jogadaAleatoria], jogadorO);
-            // ver();
         }
     }
 }
@@ -92,10 +169,6 @@ function jogadorCPU() {
 //Função para efetuar o jogo
 function jogar(id, jogador) {
     const celula = document.getElementById(id);
-
-    if (celula.id == 4) {
-        centro = true;
-    }
 
     celula.textContent = jogador;
     celula.classList.add(jogador);
@@ -116,7 +189,6 @@ function analisarVencedor(jogador) {
     })
 
     if (vencedor) {
-        // ver(combinacao);
         finalizarJogo(jogador);
     } else if (verificarEmpate()) {
         finalizarJogo();
@@ -164,7 +236,7 @@ function finalizarJogo(vencedor = null) {
         if (vencedor) {
             h2.innerHTML = `<img id="fogos" src="./img/fogos.gif"><br><span class="resultado">${vencedor}</span> é o jogador vencedor`;
         } else {
-            h2.innerHTML = `<img id="empate" src="./img/empate.gif"><br>O jogo Empatou.`;
+            h2.innerHTML = `<img width="100px" style="margin-top: 100px" id="empate" src="./img/empate.gif"><br>O jogo Empatou.`;
         }
 
         let relogio = 1;
