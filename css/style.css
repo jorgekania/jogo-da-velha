@@ -10,6 +10,9 @@ body, html{
     background-repeat: no-repeat;
     background-position: center;
 }
+#img-social{
+    display: none;
+}
 .container{
     position: relative;
     top: 25%;
