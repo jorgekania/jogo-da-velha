@@ -3,6 +3,8 @@
 //constante e variáveis do jogo
 const celulas = document.querySelectorAll('.celula');
 const grid = document.getElementById('grid');
+const vitorias = document.getElementById('vitorias');
+const derrotas = document.getElementById('derrotas');
 
 const jogadorX = "✘";
 const jogadorO = "◎";
@@ -10,6 +12,57 @@ let fimDeJogo = false;
 let jogador;
 let centro = false;
 let proxJogador = true;
+let placarVitorias = 0;
+let placarDerrotas = 0;
+
+//Função para ler o placar já gravado
+function getCookie(name) {
+    var cookies = document.cookie;
+    var prefix = name + "=";
+    var begin = cookies.indexOf("; " + prefix);
+
+    if (begin == -1) {
+
+        begin = cookies.indexOf(prefix);
+
+        if (begin != 0) {
+            return null;
+        }
+
+    } else {
+        begin += 2;
+    }
+
+    var end = cookies.indexOf(";", begin);
+
+    if (end == -1) {
+        end = cookies.length;
+    }
+
+    return unescape(cookies.substring(begin + prefix.length, end));
+}
+
+console.log(getCookie('placar-v'))
+console.log(isNaN(getCookie('placar-v')))
+
+if (getCookie('placar-v') === null || isNaN(getCookie('placar-v')) || getCookie('placar-d') === null || isNaN(getCookie('placar-d'))) {
+    placarVitorias = placarVitorias;
+    document.cookie = "placar-v=" + placarVitorias;
+    vitorias.innerHTML = placarVitorias;
+
+    placarDerrotas = placarDerrotas;
+    document.cookie = "placar-d=" + placarDerrotas;
+    derrotas.innerHTML = placarDerrotas;
+} else {
+    placarVitorias = parseInt(getCookie('placar-v'));
+    document.cookie = "placar-v=" + placarVitorias;
+    vitorias.innerHTML = placarVitorias;
+
+    placarDerrotas = parseInt(getCookie('placar-d'));
+    document.cookie = "placar-d=" + placarDerrotas;
+    derrotas.innerHTML = placarDerrotas;
+}
+
 
 //Montagem do canvas para criar a linha que mostra o vencedor
 const canvas = document.querySelector('canvas');
@@ -277,7 +330,6 @@ function verificarEmpate() {
     return x + o === 9 ? true : false;
 }
 
-
 //Função ara finalizar o jogo e mostrar a mensagem final
 function finalizarJogo(vencedor = null) {
 
@@ -296,6 +348,20 @@ function finalizarJogo(vencedor = null) {
         telaEscura.appendChild(h3);
 
         if (vencedor) {
+
+            if (vencedor === jogadorX) {
+
+                placarVitorias = parseInt(getCookie('placar-v')) + 1;
+                document.cookie = "placar-v=" + placarVitorias;
+                vitorias.innerHTML = placarVitorias;
+
+            } else {
+
+                placarDerrotas = parseInt(getCookie('placar-d')) + 1;
+                document.cookie = "placar-d=" + placarDerrotas;
+                derrotas.innerHTML = placarDerrotas;
+            }
+
             h2.innerHTML = `<img id="fogos" src="./img/fogos.gif"><br><span class="resultado">${vencedor}</span> é o jogador vencedor`;
         } else {
             h2.innerHTML = `<img width="100px" style="margin-top: 100px" id="empate" src="./img/empate.gif"><br>O jogo Empatou.`;

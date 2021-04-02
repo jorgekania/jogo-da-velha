@@ -21,6 +21,10 @@
     <meta property="og:description"
         content="Tradicional jogo da velha. Divirta-se tentando ganhar do computador. Mostre o quanto você é bom.">
 
+    <!-- GOOGLE ADS -->
+    <script data-ad-client="ca-pub-8629327840737258" async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
 
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
     <link type="text/css" rel="stylesheet" href="./css/style.css">
@@ -33,16 +37,16 @@
     <div class="container">
         <div class="jogo">
             <h2 class="titulo">Jogo da Velha</h2>
-            <!-- <div class="jogadores">
-                <div>
-                    <label for="jogador_1">Jogador - X</label>
-                    <input type="text" class="jogador" id="jogador_1">
+            <div class="placar">
+                <div class="pontos">
+                    <span class="titulo-pontos">Vitórias</span>
+                    <div id="vitorias"></div>
                 </div>
-                <div>
-                    <label for="jogador_2">Jogador - O</label>
-                    <input type="text" class="jogador" id="jogador_2">
+                <div class="pontos">
+                    <span class="titulo-pontos">Derrotas</span>
+                    <div id="derrotas"></div>
                 </div>
-            </div> -->
+            </div>
             <div class="grid" id="grid">
                 <canvas id="linhaCanvas" width="342" height="342"></canvas>
                 <div class="celula" id="0"></div>
@@ -55,6 +59,9 @@
                 <div class="celula" id="7"></div>
                 <div class="celula" id="8"></div>
             </div>
+        </div>
+        <div class="pub">
+
         </div>
     </div>
     <script src="./js/script.js"></script>
